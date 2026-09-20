@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DCI Kenya - Insurance Fraud Investigation Unit</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, sans-serif; }
+    body { margin: 0; background: #f7f9fc; color: #17202a; }
+    header { padding: 1.25rem 2rem; text-align: center; color: #fff; background: #003366; }
+    h1 { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); }
+    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: 1rem; }
+    button { border: 0; border-radius: 4px; padding: .65rem 1rem; cursor: pointer; font-weight: 700; }
+    nav button, .submit-btn { color: #fff; background: #00509e; }
+    button:hover { filter: brightness(1.12); }
+    main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    section { padding: 1.5rem; background: #fff; border-radius: 6px; box-shadow: 0 2px 10px #00000012; }
+    .hidden { display: none; }
+    form > div { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: .35rem; font-weight: 700; }
+    input, select, textarea { box-sizing: border-box; width: 100%; padding: .65rem; border: 1px solid #c8d0d9; border-radius: 4px; font: inherit; }
+    textarea { min-height: 90px; resize: vertical; }
+    table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+    th, td { padding: .7rem; border: 1px solid #dce1e6; text-align: left; vertical-align: top; }
+    th { color: #fff; background: #00509e; }
+    .table-wrap { overflow-x: auto; }
+    .admin-role { margin: 1rem 0; padding: 1rem; border: 1px solid #7aa9d6; border-radius: 6px; background: #e6f0ff; }
+    .admin-role h3 { margin-top: 0; color: #003366; }
+    .admin-person { margin-left: .5rem; font-weight: 700; }
+    .error { margin: 1rem 0; padding: .75rem; color: #8a1c1c; background: #ffe5e5; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Insurance Fraud Investigation Unit - DCI Kenya</h1>
+    <p>Officers attached to Insurance Regulatory Authority (IRA)</p>
+    <nav>
+      <button id="showCasesBtn">Cases</button>
+      <button id="showInvestigatorsBtn">Investigators</button>
+      <button id="showAdministrationBtn">Administration</button>
+      <button id="addCaseBtn">Add Case</button>
+      <button id="addInvestigatorBtn">Add Investigator</button>
+    </nav>
+  </header>
+  <main>
+    <div id="message" class="error hidden" role="alert"></div>
+    <section id="casesSection">
+      <h2>Investigation Cases</h2>
+      <div class="table-wrap"><table id="casesTable"><thead><tr><th>Case ID</th><th>Title</th><th>Description</th><th>Date Reported</th><th>Assigned Investigator</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section id="investigatorsSection" class="hidden">
+      <h2>Investigators</h2>
+      <div class="table-wrap"><table id="investigatorsTable"><thead><tr><th>Officer ID</th><th>Name</th><th>Rank</th><th>Contact Email</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section id="administrationSection" class="hidden">
+      <h2>Unit Administration</h2>
+      <div class="admin-role"><h3>Officer in Charge (OC)</h3><div id="ocPerson" class="admin-person"></div></div>
+      <div class="admin-role"><h3>Deputy Officer in Charge</h3><div id="deputyPerson" class="admin-person"></div></div>
+      <div class="admin-role"><h3>Secretary</h3><div id="secretaryPerson" class="admin-person"></div></div>
+      <div class="admin-role"><h3>Driver</h3><div id="driverPerson" class="admin-person"></div></div>
+      <div class="admin-role"><h3>Other Investigators</h3><ul id="otherInvestigatorsList"></ul></div>
+      <button id="editAdminBtn" class="submit-btn">Edit Administration</button>
+    </section>
+    <section id="editAdministrationSection" class="hidden">
+      <h2>Edit Unit Administration</h2>
+      <form id="editAdminForm">
+        <div><label for="ocSelect">Officer in Charge (OC)</label><select id="ocSelect" required></select></div>
+        <div><label for="deputySelect">Deputy Officer in Charge</label><select id="deputySelect" required></select></div>
+        <div><label for="secretarySelect">Secretary</label><select id="secretarySelect" required></select></div>
+        <div><label for="driverSelect">Driver</label><select id="driverSelect" required></select></div>
+        <div><label for="otherInvestigatorsSelect">Other Investigators</label><select id="otherInvestigatorsSelect" multiple size="6"></select></div>
+        <button class="submit-btn">Save Administration</button> <button type="button" id="cancelEditAdminBtn">Cancel</button>
+      </form>
+    </section>
+    <section id="addCaseSection" class="hidden">
+      <h2>Add New Case</h2>
+      <form id="addCaseForm">
+        <div><label for="caseId">Case ID</label><input id="caseId" name="caseId" required></div>
+        <div><label for="caseTitle">Title</label><input id="caseTitle" name="caseTitle" required></div>
+        <div><label for="caseDescription">Description</label><textarea id="caseDescription" name="caseDescription" required></textarea></div>
+        <div><label for="dateReported">Date Reported</label><input id="dateReported" name="dateReported" type="date" required></div>
+        <div><label for="assignedInvestigator">Assigned Investigator</label><select id="assignedInvestigator" name="assignedInvestigator" required></select></div>
+        <div><label for="caseStatus">Status</label><select id="caseStatus" name="caseStatus" required><option>Open</option><option>Under Investigation</option><option>Closed</option></select></div>
+        <button class="submit-btn">Add Case</button>
+      </form>
+    </section>
+    <section id="addInvestigatorSection" class="hidden">
+      <h2>Add Investigator</h2>
+      <form id="addInvestigatorForm">
+        <div><label for="officerId">Officer ID</label><input id="officerId" name="officerId" required></div>
+        <div><label for="officerName">Name</label><input id="officerName" name="officerName" required></div>
+        <div><label for="officerRank">Rank</label><input id="officerRank" name="officerRank" required></div>
+        <div><label for="officerEmail">Contact Email</label><input id="officerEmail" name="officerEmail" type="email" required></div>
+        <button class="submit-btn">Add Investigator</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+    const ids = id => document.getElementById(id);
+    const sections = ['casesSection', 'investigatorsSection', 'administrationSection', 'addCaseSection', 'addInvestigatorSection', 'editAdministrationSection'].map(ids);
+    let administrationData = {};
+
+    function showError(error) { ids('message').textContent = error.message || String(error); ids('message').classList.remove('hidden'); }
+    function clearError() { ids('message').classList.add('hidden'); }
+    function hideAll() { sections.forEach(section => section.classList.add('hidden')); clearError(); }
+    async function request(path, options) {
+      const response = await fetch(`${API_BASE}${path}`, options);
+      if (!response.ok) { const body = await response.json().catch(() => ({})); throw new Error(body.error || `Request failed (${response.status})`); }
+      return response.status === 204 ? null : response.json();
+    }
+    async function fetchInvestigators() { return request('/investigators'); }
+    async function fetchCases() { return request('/cases'); }
+    async function fetchAdministration() { return request('/administration'); }
+    function text(value) { return value || 'No assignment yet.'; }
+    function optionMarkup(investigators, empty = true) { return (empty ? '<option value="">-- Select Investigator --</option>' : '') + investigators.map(inv => `<option value="${inv.name}">${inv.name} (${inv.rank})</option>`).join(''); }
+
+    async function renderCases() {
+      const body = ids('casesTable').querySelector('tbody');
+      try { const cases = await fetchCases(); body.innerHTML = cases.length ? cases.map(c => `<tr><td>${c.caseId}</td><td>${c.title}</td><td>${c.description}</td><td>${new Date(c.dateReported).toISOString().slice(0, 10)}</td><td>${c.assignedInvestigator}</td><td>${c.status}</td></tr>`).join('') : '<tr><td colspan="6">No cases found.</td></tr>'; } catch (error) { body.innerHTML = ''; showError(error); }
+    }
+    async function renderInvestigators() {
+      const body = ids('investigatorsTable').querySelector('tbody');
+      try { const investigators = await fetchInvestigators(); body.innerHTML = investigators.length ? investigators.map(inv => `<tr><td>${inv.officerId}</td><td>${inv.name}</td><td>${inv.rank}</td><td>${inv.email}</td></tr>`).join('') : '<tr><td colspan="4">No investigators found.</td></tr>'; } catch (error) { body.innerHTML = ''; showError(error); }
+    }
+    async function renderAdministration() {
+      try {
+        administrationData = await fetchAdministration();
+        ['oc', 'deputy', 'secretary', 'driver'].forEach(role => ids(`${role}Person`).textContent = text(administrationData[role]));
+        const investigators = await fetchInvestigators();
+        const others = administrationData.otherInvestigators?.length ? administrationData.otherInvestigators : investigators.map(inv => inv.name).filter(name => !['oc', 'deputy', 'secretary', 'driver'].some(role => administrationData[role] === name));
+        ids('otherInvestigatorsList').innerHTML = others.length ? others.map(name => { const inv = investigators.find(item => item.name === name); return `<li>${inv ? `${inv.name} (${inv.rank})` : name}</li>`; }).join('') : '<li>No other investigators assigned yet.</li>';
+      } catch (error) { showError(error); }
+    }
+    async function populateForms() {
+      const investigators = await fetchInvestigators();
+      ['assignedInvestigator', 'ocSelect', 'deputySelect', 'secretarySelect', 'driverSelect'].forEach(id => ids(id).innerHTML = optionMarkup(investigators));
+      ids('otherInvestigatorsSelect').innerHTML = optionMarkup(investigators, false);
+      ['oc', 'deputy', 'secretary', 'driver'].forEach(role => ids(`${role}Select`).value = administrationData[role] || '');
+      (administrationData.otherInvestigators || []).forEach(name => { const option = [...ids('otherInvestigatorsSelect').options].find(item => item.value === name); if (option) option.selected = true; });
+    }
+    async function openAdministrationEditor() { try { administrationData = await fetchAdministration(); await populateForms(); hideAll(); ids('editAdministrationSection').classList.remove('hidden'); } catch (error) { showError(error); } }
+
+    ids('showCasesBtn').onclick = () => { hideAll(); ids('casesSection').classList.remove('hidden'); renderCases(); };
+    ids('showInvestigatorsBtn').onclick = () => { hideAll(); ids('investigatorsSection').classList.remove('hidden'); renderInvestigators(); };
+    ids('showAdministrationBtn').onclick = () => { hideAll(); ids('administrationSection').classList.remove('hidden'); renderAdministration(); };
+    ids('addCaseBtn').onclick = async () => { try { await populateForms(); ids('addCaseForm').reset(); hideAll(); ids('addCaseSection').classList.remove('hidden'); } catch (error) { showError(error); } };
+    ids('addInvestigatorBtn').onclick = () => { hideAll(); ids('addInvestigatorSection').classList.remove('hidden'); ids('addInvestigatorForm').reset(); };
+    ids('editAdminBtn').onclick = openAdministrationEditor;
+    ids('cancelEditAdminBtn').onclick = () => { hideAll(); ids('administrationSection').classList.remove('hidden'); renderAdministration(); };
+
+    ids('addInvestigatorForm').onsubmit = async event => { event.preventDefault(); const form = event.target; const data = { officerId: form.officerId.value.trim(), name: form.officerName.value.trim(), rank: form.officerRank.value.trim(), email: form.officerEmail.value.trim() }; try { await request('/investigators', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); alert('Investigator added successfully!'); ids('showInvestigatorsBtn').click(); } catch (error) { showError(error); } };
+    ids('addCaseForm').onsubmit = async event => { event.preventDefault(); const form = event.target; const data = { caseId: form.caseId.value.trim(), title: form.caseTitle.value.trim(), description: form.caseDescription.value.trim(), dateReported: form.dateReported.value, assignedInvestigator: form.assignedInvestigator.value, status: form.caseStatus.value }; try { await request('/cases', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); alert('Case added successfully!'); ids('showCasesBtn').click(); } catch (error) { showError(error); } };
+    ids('editAdminForm').onsubmit = async event => { event.preventDefault(); const roles = ['oc', 'deputy', 'secretary', 'driver'].map(role => ids(`${role}Select`).value).filter(Boolean); const others = [...ids('otherInvestigatorsSelect').selectedOptions].map(option => option.value); if (new Set(roles).size !== roles.length || roles.some(role => others.includes(role))) return showError(new Error('Each officer can have only one administration assignment.')); const payload = { oc: ids('ocSelect').value || null, deputy: ids('deputySelect').value || null, secretary: ids('secretarySelect').value || null, driver: ids('driverSelect').value || null, otherInvestigators: others }; try { await request('/administration', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); alert('Administration updated successfully!'); ids('showAdministrationBtn').click(); } catch (error) { showError(error); } };
+
+    ids('showCasesBtn').click();
+  </script>
+</body>
+</html>
