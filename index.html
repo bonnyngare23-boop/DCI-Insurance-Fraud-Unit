@@ -1,33 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DCI Kenya - Insurance Fraud Investigation Unit</title>
   <style>
-    :root { color-scheme: light; font-family: Arial, sans-serif; }
-    body { margin: 0; background: #f7f9fc; color: #17202a; }
-    header { padding: 1.25rem 2rem; text-align: center; color: #fff; background: #003366; }
-    h1 { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); }
-    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: 1rem; }
-    button { border: 0; border-radius: 4px; padding: .65rem 1rem; cursor: pointer; font-weight: 700; }
-    nav button, .submit-btn { color: #fff; background: #00509e; }
-    button:hover { filter: brightness(1.12); }
-    main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-    section { padding: 1.5rem; background: #fff; border-radius: 6px; box-shadow: 0 2px 10px #00000012; }
-    .hidden { display: none; }
-    form > div { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: .35rem; font-weight: 700; }
-    input, select, textarea { box-sizing: border-box; width: 100%; padding: .65rem; border: 1px solid #c8d0d9; border-radius: 4px; font: inherit; }
-    textarea { min-height: 90px; resize: vertical; }
-    table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
-    th, td { padding: .7rem; border: 1px solid #dce1e6; text-align: left; vertical-align: top; }
-    th { color: #fff; background: #00509e; }
-    .table-wrap { overflow-x: auto; }
-    .admin-role { margin: 1rem 0; padding: 1rem; border: 1px solid #7aa9d6; border-radius: 6px; background: #e6f0ff; }
-    .admin-role h3 { margin-top: 0; color: #003366; }
-    .admin-person { margin-left: .5rem; font-weight: 700; }
-    .error { margin: 1rem 0; padding: .75rem; color: #8a1c1c; background: #ffe5e5; border-radius: 4px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    nav {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    nav button {
+      background-color: #00509e;
+      border: none;
+      padding: 0.5rem 1rem;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    nav button:hover {
+      background-color: #0073e6;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 6px;
+    }
+    form > div {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    textarea {
+      min-height: 80px;
+    }
+    button.submit-btn {
+      background-color: #00509e;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button.submit-btn:hover {
+      background-color: #0073e6;
+    }
+    section {
+      margin-top: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.7rem;
+      text-align: left;
+    }
+    th {
+      background-color: #00509e;
+      color: white;
+    }
+    .hidden {
+      display: none;
+    }
+    /* Administration card styling */
+    .admin-role {
+      border: 1px solid #00509e;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #e6f0ff;
+    }
+    .admin-role h3 {
+      margin-top: 0;
+      color: #003366;
+    }
+    .admin-person {
+      margin-left: 1rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -42,118 +129,584 @@
       <button id="addInvestigatorBtn">Add Investigator</button>
     </nav>
   </header>
+
   <main>
-    <div id="message" class="error hidden" role="alert"></div>
+    <!-- Cases List -->
     <section id="casesSection">
       <h2>Investigation Cases</h2>
-      <div class="table-wrap"><table id="casesTable"><thead><tr><th>Case ID</th><th>Title</th><th>Description</th><th>Date Reported</th><th>Assigned Investigator</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <table id="casesTable">
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date Reported</th>
+            <th>Assigned Investigator</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Cases rows here -->
+        </tbody>
+      </table>
     </section>
+
+    <!-- Investigators List -->
     <section id="investigatorsSection" class="hidden">
       <h2>Investigators</h2>
-      <div class="table-wrap"><table id="investigatorsTable"><thead><tr><th>Officer ID</th><th>Name</th><th>Rank</th><th>Contact Email</th></tr></thead><tbody></tbody></table></div>
+      <table id="investigatorsTable">
+        <thead>
+          <tr>
+            <th>Officer ID</th>
+            <th>Name</th>
+            <th>Rank</th>
+            <th>Contact Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Investigators rows here -->
+        </tbody>
+      </table>
     </section>
+
+    <!-- Administration Section -->
     <section id="administrationSection" class="hidden">
       <h2>Unit Administration</h2>
-      <div class="admin-role"><h3>Officer in Charge (OC)</h3><div id="ocPerson" class="admin-person"></div></div>
-      <div class="admin-role"><h3>Deputy Officer in Charge</h3><div id="deputyPerson" class="admin-person"></div></div>
-      <div class="admin-role"><h3>Secretary</h3><div id="secretaryPerson" class="admin-person"></div></div>
-      <div class="admin-role"><h3>Driver</h3><div id="driverPerson" class="admin-person"></div></div>
-      <div class="admin-role"><h3>Other Investigators</h3><ul id="otherInvestigatorsList"></ul></div>
-      <button id="editAdminBtn" class="submit-btn">Edit Administration</button>
+      
+      <!-- Officer in Charge -->
+      <div class="admin-role" id="ocCard">
+        <h3>Officer in Charge (OC)</h3>
+        <div class="admin-person" id="ocPerson">No assignment yet.</div>
+      </div>
+
+      <!-- Deputy Officer in Charge -->
+      <div class="admin-role" id="deputyCard">
+        <h3>Deputy Officer in Charge</h3>
+        <div class="admin-person" id="deputyPerson">No assignment yet.</div>
+      </div>
+
+      <!-- Secretary -->
+      <div class="admin-role" id="secretaryCard">
+        <h3>Secretary</h3>
+        <div class="admin-person" id="secretaryPerson">No assignment yet.</div>
+      </div>
+
+      <!-- Driver -->
+      <div class="admin-role" id="driverCard">
+        <h3>Driver</h3>
+        <div class="admin-person" id="driverPerson">No assignment yet.</div>
+      </div>
+
+      <!-- Other Investigators -->
+      <div class="admin-role" id="otherInvestigatorsCard">
+        <h3>Other Investigators</h3>
+        <ul id="otherInvestigatorsList">
+          <li>No other investigators assigned yet.</li>
+        </ul>
+      </div>
+
+      <button id="editAdminBtn" class="submit-btn" style="margin-top: 1rem;">Edit Administration</button>
     </section>
+
+    <!-- Administration Edit Form -->
     <section id="editAdministrationSection" class="hidden">
       <h2>Edit Unit Administration</h2>
       <form id="editAdminForm">
-        <div><label for="ocSelect">Officer in Charge (OC)</label><select id="ocSelect" required></select></div>
-        <div><label for="deputySelect">Deputy Officer in Charge</label><select id="deputySelect" required></select></div>
-        <div><label for="secretarySelect">Secretary</label><select id="secretarySelect" required></select></div>
-        <div><label for="driverSelect">Driver</label><select id="driverSelect" required></select></div>
-        <div><label for="otherInvestigatorsSelect">Other Investigators</label><select id="otherInvestigatorsSelect" multiple size="6"></select></div>
-        <button class="submit-btn">Save Administration</button> <button type="button" id="cancelEditAdminBtn">Cancel</button>
+        <div>
+          <label for="ocSelect">Officer in Charge (OC)</label>
+          <select id="ocSelect" required>
+            <option value="">-- Select Investigator --</option>
+          </select>
+        </div>
+        <div>
+          <label for="deputySelect">Deputy Officer in Charge</label>
+          <select id="deputySelect" required>
+            <option value="">-- Select Investigator --</option>
+          </select>
+        </div>
+        <div>
+          <label for="secretarySelect">Secretary</label>
+          <select id="secretarySelect" required>
+            <option value="">-- Select Investigator --</option>
+          </select>
+        </div>
+        <div>
+          <label for="driverSelect">Driver</label>
+          <select id="driverSelect" required>
+            <option value="">-- Select Investigator --</option>
+          </select>
+        </div>
+        <div>
+          <label for="otherInvestigatorsSelect" >Other Investigators (Ctrl+Click to select multiple)</label>
+          <select id="otherInvestigatorsSelect" multiple size="6" style="height:auto;">
+            <!-- Multiple selection list -->
+          </select>
+        </div>
+        <button type="submit" class="submit-btn">Save Administration</button>
+        <button type="button" id="cancelEditAdminBtn" style="margin-left: 1rem; background-color: #ccc; color: black;">Cancel</button>
       </form>
     </section>
+
+    <!-- Add Case Form -->
     <section id="addCaseSection" class="hidden">
       <h2>Add New Case</h2>
       <form id="addCaseForm">
-        <div><label for="caseId">Case ID</label><input id="caseId" name="caseId" required></div>
-        <div><label for="caseTitle">Title</label><input id="caseTitle" name="caseTitle" required></div>
-        <div><label for="caseDescription">Description</label><textarea id="caseDescription" name="caseDescription" required></textarea></div>
-        <div><label for="dateReported">Date Reported</label><input id="dateReported" name="dateReported" type="date" required></div>
-        <div><label for="assignedInvestigator">Assigned Investigator</label><select id="assignedInvestigator" name="assignedInvestigator" required></select></div>
-        <div><label for="caseStatus">Status</label><select id="caseStatus" name="caseStatus" required><option>Open</option><option>Under Investigation</option><option>Closed</option></select></div>
-        <button class="submit-btn">Add Case</button>
+        <div>
+          <label for="caseId">Case ID</label>
+          <input type="text" id="caseId" name="caseId" required />
+        </div>
+        <div>
+          <label for="caseTitle">Title</label>
+          <input type="text" id="caseTitle" name="caseTitle" required />
+        </div>
+        <div>
+          <label for="caseDescription">Description</label>
+          <textarea id="caseDescription" name="caseDescription" required></textarea>
+        </div>
+        <div>
+          <label for="dateReported">Date Reported</label>
+          <input type="date" id="dateReported" name="dateReported" required />
+        </div>
+        <div>
+          <label for="assignedInvestigator">Assigned Investigator</label>
+          <select id="assignedInvestigator" name="assignedInvestigator" required>
+            <option value="">-- Select Investigator --</option>
+            <!-- Investigator options -->
+          </select>
+        </div>
+        <div>
+          <label for="caseStatus">Status</label>
+          <select id="caseStatus" name="caseStatus" required>
+            <option value="Open">Open</option>
+            <option value="Under Investigation">Under Investigation</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn">Add Case</button>
       </form>
     </section>
+
+    <!-- Add Investigator Form -->
     <section id="addInvestigatorSection" class="hidden">
       <h2>Add Investigator</h2>
       <form id="addInvestigatorForm">
-        <div><label for="officerId">Officer ID</label><input id="officerId" name="officerId" required></div>
-        <div><label for="officerName">Name</label><input id="officerName" name="officerName" required></div>
-        <div><label for="officerRank">Rank</label><input id="officerRank" name="officerRank" required></div>
-        <div><label for="officerEmail">Contact Email</label><input id="officerEmail" name="officerEmail" type="email" required></div>
-        <button class="submit-btn">Add Investigator</button>
+        <div>
+          <label for="officerId">Officer ID</label>
+          <input type="text" id="officerId" name="officerId" required />
+        </div>
+        <div>
+          <label for="officerName">Name</label>
+          <input type="text" id="officerName" name="officerName" required />
+        </div>
+        <div>
+          <label for="officerRank">Rank</label>
+          <input type="text" id="officerRank" name="officerRank" required />
+        </div>
+        <div>
+          <label for="officerEmail">Contact Email</label>
+          <input type="text" id="officerEmail" name="officerEmail" required pattern="^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" />
+        </div>
+        <button type="submit" class="submit-btn">Add Investigator</button>
       </form>
     </section>
   </main>
+
   <script>
-    const API_BASE = 'http://localhost:5000/api';
-    const ids = id => document.getElementById(id);
-    const sections = ['casesSection', 'investigatorsSection', 'administrationSection', 'addCaseSection', 'addInvestigatorSection', 'editAdministrationSection'].map(ids);
-    let administrationData = {};
+    // Data storage (in-memory)
+    const cases = [];
+    const investigators = [];
 
-    function showError(error) { ids('message').textContent = error.message || String(error); ids('message').classList.remove('hidden'); }
-    function clearError() { ids('message').classList.add('hidden'); }
-    function hideAll() { sections.forEach(section => section.classList.add('hidden')); clearError(); }
-    async function request(path, options) {
-      const response = await fetch(`${API_BASE}${path}`, options);
-      if (!response.ok) { const body = await response.json().catch(() => ({})); throw new Error(body.error || `Request failed (${response.status})`); }
-      return response.status === 204 ? null : response.json();
-    }
-    async function fetchInvestigators() { return request('/investigators'); }
-    async function fetchCases() { return request('/cases'); }
-    async function fetchAdministration() { return request('/administration'); }
-    function text(value) { return value || 'No assignment yet.'; }
-    function optionMarkup(investigators, empty = true) { return (empty ? '<option value="">-- Select Investigator --</option>' : '') + investigators.map(inv => `<option value="${inv.name}">${inv.name} (${inv.rank})</option>`).join(''); }
+    // Administration assignments
+    let administration = {
+      oc: null, // Officer in Charge
+      deputy: null,
+      secretary: null,
+      driver: null,
+      otherInvestigators: []
+    };
 
-    async function renderCases() {
-      const body = ids('casesTable').querySelector('tbody');
-      try { const cases = await fetchCases(); body.innerHTML = cases.length ? cases.map(c => `<tr><td>${c.caseId}</td><td>${c.title}</td><td>${c.description}</td><td>${new Date(c.dateReported).toISOString().slice(0, 10)}</td><td>${c.assignedInvestigator}</td><td>${c.status}</td></tr>`).join('') : '<tr><td colspan="6">No cases found.</td></tr>'; } catch (error) { body.innerHTML = ''; showError(error); }
-    }
-    async function renderInvestigators() {
-      const body = ids('investigatorsTable').querySelector('tbody');
-      try { const investigators = await fetchInvestigators(); body.innerHTML = investigators.length ? investigators.map(inv => `<tr><td>${inv.officerId}</td><td>${inv.name}</td><td>${inv.rank}</td><td>${inv.email}</td></tr>`).join('') : '<tr><td colspan="4">No investigators found.</td></tr>'; } catch (error) { body.innerHTML = ''; showError(error); }
-    }
-    async function renderAdministration() {
-      try {
-        administrationData = await fetchAdministration();
-        ['oc', 'deputy', 'secretary', 'driver'].forEach(role => ids(`${role}Person`).textContent = text(administrationData[role]));
-        const investigators = await fetchInvestigators();
-        const others = administrationData.otherInvestigators?.length ? administrationData.otherInvestigators : investigators.map(inv => inv.name).filter(name => !['oc', 'deputy', 'secretary', 'driver'].some(role => administrationData[role] === name));
-        ids('otherInvestigatorsList').innerHTML = others.length ? others.map(name => { const inv = investigators.find(item => item.name === name); return `<li>${inv ? `${inv.name} (${inv.rank})` : name}</li>`; }).join('') : '<li>No other investigators assigned yet.</li>';
-      } catch (error) { showError(error); }
-    }
-    async function populateForms() {
-      const investigators = await fetchInvestigators();
-      ['assignedInvestigator', 'ocSelect', 'deputySelect', 'secretarySelect', 'driverSelect'].forEach(id => ids(id).innerHTML = optionMarkup(investigators));
-      ids('otherInvestigatorsSelect').innerHTML = optionMarkup(investigators, false);
-      ['oc', 'deputy', 'secretary', 'driver'].forEach(role => ids(`${role}Select`).value = administrationData[role] || '');
-      (administrationData.otherInvestigators || []).forEach(name => { const option = [...ids('otherInvestigatorsSelect').options].find(item => item.value === name); if (option) option.selected = true; });
-    }
-    async function openAdministrationEditor() { try { administrationData = await fetchAdministration(); await populateForms(); hideAll(); ids('editAdministrationSection').classList.remove('hidden'); } catch (error) { showError(error); } }
+    // DOM elements
+    const casesSection = document.getElementById('casesSection');
+    const investigatorsSection = document.getElementById('investigatorsSection');
+    const administrationSection = document.getElementById('administrationSection');
+    const addCaseSection = document.getElementById('addCaseSection');
+    const addInvestigatorSection = document.getElementById('addInvestigatorSection');
+    const editAdministrationSection = document.getElementById('editAdministrationSection');
 
-    ids('showCasesBtn').onclick = () => { hideAll(); ids('casesSection').classList.remove('hidden'); renderCases(); };
-    ids('showInvestigatorsBtn').onclick = () => { hideAll(); ids('investigatorsSection').classList.remove('hidden'); renderInvestigators(); };
-    ids('showAdministrationBtn').onclick = () => { hideAll(); ids('administrationSection').classList.remove('hidden'); renderAdministration(); };
-    ids('addCaseBtn').onclick = async () => { try { await populateForms(); ids('addCaseForm').reset(); hideAll(); ids('addCaseSection').classList.remove('hidden'); } catch (error) { showError(error); } };
-    ids('addInvestigatorBtn').onclick = () => { hideAll(); ids('addInvestigatorSection').classList.remove('hidden'); ids('addInvestigatorForm').reset(); };
-    ids('editAdminBtn').onclick = openAdministrationEditor;
-    ids('cancelEditAdminBtn').onclick = () => { hideAll(); ids('administrationSection').classList.remove('hidden'); renderAdministration(); };
+    const casesTableBody = document.querySelector('#casesTable tbody');
+    const investigatorsTableBody = document.querySelector('#investigatorsTable tbody');
 
-    ids('addInvestigatorForm').onsubmit = async event => { event.preventDefault(); const form = event.target; const data = { officerId: form.officerId.value.trim(), name: form.officerName.value.trim(), rank: form.officerRank.value.trim(), email: form.officerEmail.value.trim() }; try { await request('/investigators', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); alert('Investigator added successfully!'); ids('showInvestigatorsBtn').click(); } catch (error) { showError(error); } };
-    ids('addCaseForm').onsubmit = async event => { event.preventDefault(); const form = event.target; const data = { caseId: form.caseId.value.trim(), title: form.caseTitle.value.trim(), description: form.caseDescription.value.trim(), dateReported: form.dateReported.value, assignedInvestigator: form.assignedInvestigator.value, status: form.caseStatus.value }; try { await request('/cases', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); alert('Case added successfully!'); ids('showCasesBtn').click(); } catch (error) { showError(error); } };
-    ids('editAdminForm').onsubmit = async event => { event.preventDefault(); const roles = ['oc', 'deputy', 'secretary', 'driver'].map(role => ids(`${role}Select`).value).filter(Boolean); const others = [...ids('otherInvestigatorsSelect').selectedOptions].map(option => option.value); if (new Set(roles).size !== roles.length || roles.some(role => others.includes(role))) return showError(new Error('Each officer can have only one administration assignment.')); const payload = { oc: ids('ocSelect').value || null, deputy: ids('deputySelect').value || null, secretary: ids('secretarySelect').value || null, driver: ids('driverSelect').value || null, otherInvestigators: others }; try { await request('/administration', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); alert('Administration updated successfully!'); ids('showAdministrationBtn').click(); } catch (error) { showError(error); } };
+    const assignedInvestigatorSelect = document.getElementById('assignedInvestigator');
 
-    ids('showCasesBtn').click();
+    // Admin display elements
+    const ocPerson = document.getElementById('ocPerson');
+    const deputyPerson = document.getElementById('deputyPerson');
+    const secretaryPerson = document.getElementById('secretaryPerson');
+    const driverPerson = document.getElementById('driverPerson');
+    const otherInvestigatorsList = document.getElementById('otherInvestigatorsList');
+
+    // Admin edit form selects
+    const ocSelect = document.getElementById('ocSelect');
+    const deputySelect = document.getElementById('deputySelect');
+    const secretarySelect = document.getElementById('secretarySelect');
+    const driverSelect = document.getElementById('driverSelect');
+    const otherInvestigatorsSelect = document.getElementById('otherInvestigatorsSelect');
+
+    // Buttons
+    const showCasesBtn = document.getElementById('showCasesBtn');
+    const showInvestigatorsBtn = document.getElementById('showInvestigatorsBtn');
+    const showAdministrationBtn = document.getElementById('showAdministrationBtn');
+    const addCaseBtn = document.getElementById('addCaseBtn');
+    const addInvestigatorBtn = document.getElementById('addInvestigatorBtn');
+    const editAdminBtn = document.getElementById('editAdminBtn');
+    const cancelEditAdminBtn = document.getElementById('cancelEditAdminBtn');
+
+    // Hide all main sections
+    function hideAllSections() {
+      casesSection.classList.add('hidden');
+      investigatorsSection.classList.add('hidden');
+      administrationSection.classList.add('hidden');
+      addCaseSection.classList.add('hidden');
+      addInvestigatorSection.classList.add('hidden');
+      editAdministrationSection.classList.add('hidden');
+    }
+
+    // Navigation functions
+    function showCases() {
+      hideAllSections();
+      casesSection.classList.remove('hidden');
+      renderCases();
+    }
+
+    function showInvestigators() {
+      hideAllSections();
+      investigatorsSection.classList.remove('hidden');
+      renderInvestigators();
+    }
+
+    function showAdministration() {
+      hideAllSections();
+      administrationSection.classList.remove('hidden');
+      renderAdministration();
+    }
+
+    function showAddCase() {
+      hideAllSections();
+      populateInvestigatorDropdown();
+      addCaseSection.classList.remove('hidden');
+      document.getElementById('addCaseForm').reset();
+    }
+
+    function showAddInvestigator() {
+      hideAllSections();
+      addInvestigatorSection.classList.remove('hidden');
+      document.getElementById('addInvestigatorForm').reset();
+    }
+
+    function showEditAdministration() {
+      hideAllSections();
+      editAdministrationSection.classList.remove('hidden');
+      populateAdminEditForm();
+    }
+
+    // Render Cases Table
+    function renderCases() {
+      casesTableBody.innerHTML = '';
+      if (cases.length === 0) {
+        casesTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No cases found.</td></tr>';
+        return;
+      }
+
+      cases.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.caseId}</td>
+          <td>${c.title}</td>
+          <td>${c.description}</td>
+          <td>${c.dateReported}</td>
+          <td>${c.assignedInvestigator}</td>
+          <td>${c.status}</td>
+        `;
+        casesTableBody.appendChild(tr);
+      });
+    }
+
+    // Render Investigators Table
+    function renderInvestigators() {
+      investigatorsTableBody.innerHTML = '';
+      if (investigators.length === 0) {
+        investigatorsTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No investigators found.</td></tr>';
+        return;
+      }
+      investigators.forEach(inv => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${inv.officerId}</td>
+          <td>${inv.name}</td>
+          <td>${inv.rank}</td>
+          <td>${inv.email}</td>
+        `;
+        investigatorsTableBody.appendChild(tr);
+      });
+    }
+
+    // Populate investigators dropdown for cases
+    function populateInvestigatorDropdown() {
+      assignedInvestigatorSelect.innerHTML = '<option value="">-- Select Investigator --</option>';
+      if (investigators.length === 0) {
+        const option = document.createElement('option');
+        option.disabled = true;
+        option.textContent = 'No investigators available. Please add investigators first.';
+        assignedInvestigatorSelect.appendChild(option);
+        assignedInvestigatorSelect.disabled = true;
+      } else {
+        investigators.forEach(inv => {
+          const option = document.createElement('option');
+          option.value = inv.name;
+          option.textContent = `${inv.name} (${inv.rank})`;
+          assignedInvestigatorSelect.appendChild(option);
+        });
+        assignedInvestigatorSelect.disabled = false;
+      }
+    }
+
+    // Render Administration Section
+    function renderAdministration() {
+      // Helper to find investigator by name (case sensitive)
+      function findInvByName(name) {
+        return investigators.find(i => i.name === name);
+      }
+
+      // Display OC
+      ocPerson.textContent = administration.oc || 'No assignment yet.';
+
+      // Display Deputy
+      deputyPerson.textContent = administration.deputy || 'No assignment yet.';
+
+      // Display Secretary
+      secretaryPerson.textContent = administration.secretary || 'No assignment yet.';
+
+      // Display Driver
+      driverPerson.textContent = administration.driver || 'No assignment yet.';
+
+      // Other Investigators list: exclude OC, Deputy, Secretary, Driver
+      otherInvestigatorsList.innerHTML = '';
+
+      let others = [];
+
+      if (administration.otherInvestigators.length > 0) {
+        others = administration.otherInvestigators;
+      } else {
+        // If no explicit other investigators set, list investigators excluding oc, deputy, secretary, driver
+        others = investigators
+          .map(i => i.name)
+          .filter(name => ![administration.oc, administration.deputy, administration.secretary, administration.driver].includes(name));
+      }
+
+      if (others.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No other investigators assigned yet.';
+        otherInvestigatorsList.appendChild(li);
+      } else {
+        others.forEach(name => {
+          const li = document.createElement('li');
+          // Try to find rank/email and show
+          const inv = findInvByName(name);
+          if (inv) {
+            li.textContent = `${inv.name} (${inv.rank})`;
+          } else {
+            li.textContent = name;
+          }
+          otherInvestigatorsList.appendChild(li);
+        });
+      }
+    }
+
+    // Populate Administration Edit Form dropdowns
+    function populateAdminEditForm() {
+      // Helper: Fill a select with investigators (name) including empty option
+      function fillSelectWithInvestigators(selectElement, currentValue) {
+        selectElement.innerHTML = '<option value="">-- Select Investigator --</option>';
+        investigators.forEach(inv => {
+          const option = document.createElement('option');
+          option.value = inv.name;
+          option.textContent = `${inv.name} (${inv.rank})`;
+          // Select current if matches
+          if (inv.name === currentValue) {
+            option.selected = true;
+          }
+          selectElement.appendChild(option);
+        });
+      }
+
+      fillSelectWithInvestigators(ocSelect, administration.oc);
+      fillSelectWithInvestigators(deputySelect, administration.deputy);
+      fillSelectWithInvestigators(secretarySelect, administration.secretary);
+      fillSelectWithInvestigators(driverSelect, administration.driver);
+
+      // Populate multi-select for other investigators
+      otherInvestigatorsSelect.innerHTML = '';
+      investigators.forEach(inv => {
+        const option = document.createElement('option');
+        option.value = inv.name;
+        option.textContent = `${inv.name} (${inv.rank})`;
+        // If selected in otherInvestigators array, mark selected
+        if (administration.otherInvestigators.includes(inv.name)) {
+          option.selected = true;
+        }
+        otherInvestigatorsSelect.appendChild(option);
+      });
+    }
+
+    // Validate administration form
+    function validateAdministrationForm() {
+      // Prevent assigning the same investigator to multiple exclusive roles
+      const selected = [
+        ocSelect.value,
+        deputySelect.value,
+        secretarySelect.value,
+        driverSelect.value
+      ];
+
+      let duplicates = selected.filter((item, index) => item && selected.indexOf(item) !== index);
+      if (duplicates.length > 0) {
+        alert('One or more officers are assigned multiple roles (OC, Deputy, Secretary, Driver must be distinct).');
+        return false;
+      }
+
+      // Prevent OC, Deputy, Secretary, Driver roles to also be in other investigators
+      const othersSelected = Array.from(otherInvestigatorsSelect.selectedOptions).map(opt => opt.value);
+      for (const specialRole of selected) {
+        if (specialRole && othersSelected.includes(specialRole)) {
+          alert('An officer assigned as OC, Deputy, Secretary, or Driver cannot also be assigned as Other Investigator.');
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // Event Listeners
+
+    showCasesBtn.addEventListener('click', showCases);
+    showInvestigatorsBtn.addEventListener('click', showInvestigators);
+    showAdministrationBtn.addEventListener('click', showAdministration);
+    addCaseBtn.addEventListener('click', showAddCase);
+    addInvestigatorBtn.addEventListener('click', showAddInvestigator);
+
+    editAdminBtn.addEventListener('click', showEditAdministration);
+    cancelEditAdminBtn.addEventListener('click', () => {
+      showAdministration();
+    });
+
+    // Add Investigator Form submission
+    document.getElementById('addInvestigatorForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const officerId = this.officerId.value.trim();
+      const name = this.officerName.value.trim();
+      const rank = this.officerRank.value.trim();
+      const email = this.officerEmail.value.trim();
+
+      // Prevent duplicate officer IDs
+      if (investigators.find(inv => inv.officerId === officerId)) {
+        alert('Officer ID already exists!');
+        return;
+      }
+      // Prevent duplicate names as well? Optional, here we allow same name but warns might be better
+      if (investigators.find(inv => inv.name === name)) {
+        if (!confirm('An investigator with this name already exists. Add anyway?')) {
+          return;
+        }
+      }
+
+      investigators.push({ officerId, name, rank, email });
+      alert('Investigator added successfully!');
+      showInvestigators();
+    });
+
+    // Add Case Form submission
+    document.getElementById('addCaseForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const caseId = this.caseId.value.trim();
+      const title = this.caseTitle.value.trim();
+      const description = this.caseDescription.value.trim();
+      const dateReported = this.dateReported.value;
+      const assignedInvestigator = this.assignedInvestigator.value;
+      const status = this.caseStatus.value;
+
+      // Prevent duplicate case IDs
+      if (cases.find(c => c.caseId === caseId)) {
+        alert('Case ID already exists!');
+        return;
+      }
+
+      if (!assignedInvestigator) {
+        alert('Please select an investigator.');
+        return;
+      }
+
+      cases.push({ caseId, title, description, dateReported, assignedInvestigator, status });
+      alert('Case added successfully!');
+      showCases();
+    });
+
+    // Edit Administration Form submission
+    document.getElementById('editAdminForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (!validateAdministrationForm()) return;
+
+      administration.oc = ocSelect.value || null;
+      administration.deputy = deputySelect.value || null;
+      administration.secretary = secretarySelect.value || null;
+      administration.driver = driverSelect.value || null;
+      administration.otherInvestigators = Array.from(otherInvestigatorsSelect.selectedOptions).map(opt => opt.value);
+
+      alert('Administration updated successfully!');
+      showAdministration();
+    });
+
+    // Initialize with some demo data (optional)
+    function loadDemoData() {
+      investigators.push(
+        { officerId: 'O100', name: 'John Kamau', rank: 'Senior Investigator', email: 'john.kamau@dci.go.ke' },
+        { officerId: 'O101', name: 'Mary Wanjiku', rank: 'Investigator', email: 'mary.wanjiku@dci.go.ke' },
+        { officerId: 'O102', name: 'Peter Odhiambo', rank: 'Investigator', email: 'peter.odhiambo@dci.go.ke' },
+        { officerId: 'O103', name: 'Susan Njeri', rank: 'Secretary', email: 'susan.njeri@dci.go.ke' },
+        { officerId: 'O104', name: 'Mark Mwangi', rank: 'Driver', email: 'mark.mwangi@dci.go.ke' }
+      );
+
+      cases.push(
+        {
+          caseId: 'C001',
+          title: 'Fake Motor Insurance Claim',
+          description: 'Investigation into fake motor insurance claims submitted by XYZ Ltd.',
+          dateReported: '2024-05-01',
+          assignedInvestigator: 'John Kamau',
+          status: 'Under Investigation'
+        },
+        {
+          caseId: 'C002',
+          title: 'Health Insurance Scam',
+          description: 'Suspicious multiple health insurance claims from ABC Clinic.',
+          dateReported: '2024-04-20',
+          assignedInvestigator: 'Mary Wanjiku',
+          status: 'Open'
+        }
+      );
+
+      administration.oc = 'Mr Anthony Thyaka Muriithi';
+      administration.deputy = 'John Liban';
+      administration.secretary = 'Lucy Kariuki';
+      administration.driver = 'Daniel Muchiri';
+      administration.otherInvestigators = ['Jillo Komba'];
+    }
+
+    // On page load
+    loadDemoData();
+    showCases();
+
   </script>
+
 </body>
 </html>
