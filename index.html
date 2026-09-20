@@ -47,6 +47,13 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 6px;
     }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
     form > div {
       margin-bottom: 1rem;
     }
@@ -125,15 +132,16 @@
       <button id="showAdministrationBtn">Administration</button>
       <button id="showInvestigatorsBtn">Investigators</button>
       <button id="showCasesBtn">Cases</button>
-      <button id="addCaseBtn">Add Case</button>
-      <button id="addInvestigatorBtn">Add Investigator</button>
     </nav>
   </header>
 
   <main>
     <!-- Cases List -->
     <section id="casesSection">
-      <h2>Investigation Cases</h2>
+      <div class="section-header">
+        <h2>Investigation Cases</h2>
+        <button id="addCaseInSectionBtn" class="submit-btn">Add Case</button>
+      </div>
       <table id="casesTable">
         <thead>
           <tr>
@@ -153,7 +161,10 @@
 
     <!-- Investigators List -->
     <section id="investigatorsSection" class="hidden">
-      <h2>Investigators</h2>
+      <div class="section-header">
+        <h2>Investigators</h2>
+        <button id="addInvestigatorInSectionBtn" class="submit-btn">Add Investigator</button>
+      </div>
       <table id="investigatorsTable">
         <thead>
           <tr>
@@ -318,7 +329,7 @@
 
     // Administration assignments
     let administration = {
-      oc: null, // Officer in Charge
+      oc: null,
       deputy: null,
       secretary: null,
       driver: null,
@@ -356,8 +367,8 @@
     const showCasesBtn = document.getElementById('showCasesBtn');
     const showInvestigatorsBtn = document.getElementById('showInvestigatorsBtn');
     const showAdministrationBtn = document.getElementById('showAdministrationBtn');
-    const addCaseBtn = document.getElementById('addCaseBtn');
-    const addInvestigatorBtn = document.getElementById('addInvestigatorBtn');
+    const addCaseInSectionBtn = document.getElementById('addCaseInSectionBtn');
+    const addInvestigatorInSectionBtn = document.getElementById('addInvestigatorInSectionBtn');
     const editAdminBtn = document.getElementById('editAdminBtn');
     const cancelEditAdminBtn = document.getElementById('cancelEditAdminBtn');
 
@@ -472,24 +483,15 @@
 
     // Render Administration Section
     function renderAdministration() {
-      // Helper to find investigator by name (case sensitive)
       function findInvByName(name) {
         return investigators.find(i => i.name === name);
       }
 
-      // Display OC
       ocPerson.textContent = administration.oc || 'No assignment yet.';
-
-      // Display Deputy
       deputyPerson.textContent = administration.deputy || 'No assignment yet.';
-
-      // Display Secretary
       secretaryPerson.textContent = administration.secretary || 'No assignment yet.';
-
-      // Display Driver
       driverPerson.textContent = administration.driver || 'No assignment yet.';
 
-      // Other Investigators list: exclude OC, Deputy, Secretary, Driver
       otherInvestigatorsList.innerHTML = '';
 
       let others = [];
@@ -497,7 +499,6 @@
       if (administration.otherInvestigators.length > 0) {
         others = administration.otherInvestigators;
       } else {
-        // If no explicit other investigators set, list investigators excluding oc, deputy, secretary, driver
         others = investigators
           .map(i => i.name)
           .filter(name => ![administration.oc, administration.deputy, administration.secretary, administration.driver].includes(name));
@@ -510,7 +511,6 @@
       } else {
         others.forEach(name => {
           const li = document.createElement('li');
-          // Try to find rank/email and show
           const inv = findInvByName(name);
           if (inv) {
             li.textContent = `${inv.name} (${inv.rank})`;
@@ -524,14 +524,12 @@
 
     // Populate Administration Edit Form dropdowns
     function populateAdminEditForm() {
-      // Helper: Fill a select with investigators (name) including empty option
       function fillSelectWithInvestigators(selectElement, currentValue) {
         selectElement.innerHTML = '<option value="">-- Select Investigator --</option>';
         investigators.forEach(inv => {
           const option = document.createElement('option');
           option.value = inv.name;
           option.textContent = `${inv.name} (${inv.rank})`;
-          // Select current if matches
           if (inv.name === currentValue) {
             option.selected = true;
           }
@@ -544,13 +542,11 @@
       fillSelectWithInvestigators(secretarySelect, administration.secretary);
       fillSelectWithInvestigators(driverSelect, administration.driver);
 
-      // Populate multi-select for other investigators
       otherInvestigatorsSelect.innerHTML = '';
       investigators.forEach(inv => {
         const option = document.createElement('option');
         option.value = inv.name;
         option.textContent = `${inv.name} (${inv.rank})`;
-        // If selected in otherInvestigators array, mark selected
         if (administration.otherInvestigators.includes(inv.name)) {
           option.selected = true;
         }
@@ -560,7 +556,6 @@
 
     // Validate administration form
     function validateAdministrationForm() {
-      // Prevent assigning the same investigator to multiple exclusive roles
       const selected = [
         ocSelect.value,
         deputySelect.value,
@@ -574,7 +569,6 @@
         return false;
       }
 
-      // Prevent OC, Deputy, Secretary, Driver roles to also be in other investigators
       const othersSelected = Array.from(otherInvestigatorsSelect.selectedOptions).map(opt => opt.value);
       for (const specialRole of selected) {
         if (specialRole && othersSelected.includes(specialRole)) {
@@ -587,12 +581,11 @@
     }
 
     // Event Listeners
-
     showCasesBtn.addEventListener('click', showCases);
     showInvestigatorsBtn.addEventListener('click', showInvestigators);
     showAdministrationBtn.addEventListener('click', showAdministration);
-    addCaseBtn.addEventListener('click', showAddCase);
-    addInvestigatorBtn.addEventListener('click', showAddInvestigator);
+    addCaseInSectionBtn.addEventListener('click', showAddCase);
+    addInvestigatorInSectionBtn.addEventListener('click', showAddInvestigator);
 
     editAdminBtn.addEventListener('click', showEditAdministration);
     cancelEditAdminBtn.addEventListener('click', () => {
@@ -607,12 +600,10 @@
       const rank = this.officerRank.value.trim();
       const email = this.officerEmail.value.trim();
 
-      // Prevent duplicate officer IDs
       if (investigators.find(inv => inv.officerId === officerId)) {
         alert('Officer ID already exists!');
         return;
       }
-      // Prevent duplicate names as well? Optional, here we allow same name but warns might be better
       if (investigators.find(inv => inv.name === name)) {
         if (!confirm('An investigator with this name already exists. Add anyway?')) {
           return;
@@ -634,7 +625,6 @@
       const assignedInvestigator = this.assignedInvestigator.value;
       const status = this.caseStatus.value;
 
-      // Prevent duplicate case IDs
       if (cases.find(c => c.caseId === caseId)) {
         alert('Case ID already exists!');
         return;
