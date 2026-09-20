@@ -54,6 +54,22 @@
       gap: 1rem;
       margin-bottom: 1rem;
     }
+    .section-header h2 {
+      margin: 0;
+    }
+    .section-button {
+      background-color: #00509e;
+      border: none;
+      padding: 0.5rem 1rem;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .section-button:hover {
+      background-color: #0073e6;
+    }
     form > div {
       margin-bottom: 1rem;
     }
@@ -106,7 +122,6 @@
     .hidden {
       display: none;
     }
-    /* Administration card styling */
     .admin-role {
       border: 1px solid #00509e;
       border-radius: 6px;
@@ -136,11 +151,10 @@
   </header>
 
   <main>
-    <!-- Cases List -->
     <section id="casesSection">
       <div class="section-header">
         <h2>Investigation Cases</h2>
-        <button id="addCaseInSectionBtn" class="submit-btn">Add Case</button>
+        <button id="addCaseInSectionBtn" class="section-button">Add Case</button>
       </div>
       <table id="casesTable">
         <thead>
@@ -153,17 +167,14 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Cases rows here -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </section>
 
-    <!-- Investigators List -->
     <section id="investigatorsSection" class="hidden">
       <div class="section-header">
         <h2>Investigators</h2>
-        <button id="addInvestigatorInSectionBtn" class="submit-btn">Add Investigator</button>
+        <button id="addInvestigatorInSectionBtn" class="section-button">Add Investigator</button>
       </div>
       <table id="investigatorsTable">
         <thead>
@@ -174,52 +185,37 @@
             <th>Contact Email</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Investigators rows here -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </section>
 
-    <!-- Administration Section -->
     <section id="administrationSection" class="hidden">
       <h2>Unit Administration</h2>
-      
-      <!-- Officer in Charge -->
       <div class="admin-role" id="ocCard">
         <h3>Officer in Charge (OC)</h3>
         <div class="admin-person" id="ocPerson">No assignment yet.</div>
       </div>
-
-      <!-- Deputy Officer in Charge -->
       <div class="admin-role" id="deputyCard">
         <h3>Deputy Officer in Charge</h3>
         <div class="admin-person" id="deputyPerson">No assignment yet.</div>
       </div>
-
-      <!-- Secretary -->
       <div class="admin-role" id="secretaryCard">
         <h3>Secretary</h3>
         <div class="admin-person" id="secretaryPerson">No assignment yet.</div>
       </div>
-
-      <!-- Driver -->
       <div class="admin-role" id="driverCard">
         <h3>Driver</h3>
         <div class="admin-person" id="driverPerson">No assignment yet.</div>
       </div>
-
-      <!-- Other Investigators -->
       <div class="admin-role" id="otherInvestigatorsCard">
         <h3>Other Investigators</h3>
         <ul id="otherInvestigatorsList">
           <li>No other investigators assigned yet.</li>
         </ul>
       </div>
-
       <button id="editAdminBtn" class="submit-btn" style="margin-top: 1rem;">Edit Administration</button>
     </section>
 
-    <!-- Administration Edit Form -->
     <section id="editAdministrationSection" class="hidden">
       <h2>Edit Unit Administration</h2>
       <form id="editAdminForm">
@@ -248,17 +244,14 @@
           </select>
         </div>
         <div>
-          <label for="otherInvestigatorsSelect" >Other Investigators (Ctrl+Click to select multiple)</label>
-          <select id="otherInvestigatorsSelect" multiple size="6" style="height:auto;">
-            <!-- Multiple selection list -->
-          </select>
+          <label for="otherInvestigatorsSelect">Other Investigators (Ctrl+Click to select multiple)</label>
+          <select id="otherInvestigatorsSelect" multiple size="6" style="height:auto;"></select>
         </div>
         <button type="submit" class="submit-btn">Save Administration</button>
         <button type="button" id="cancelEditAdminBtn" style="margin-left: 1rem; background-color: #ccc; color: black;">Cancel</button>
       </form>
     </section>
 
-    <!-- Add Case Form -->
     <section id="addCaseSection" class="hidden">
       <h2>Add New Case</h2>
       <form id="addCaseForm">
@@ -282,7 +275,6 @@
           <label for="assignedInvestigator">Assigned Investigator</label>
           <select id="assignedInvestigator" name="assignedInvestigator" required>
             <option value="">-- Select Investigator --</option>
-            <!-- Investigator options -->
           </select>
         </div>
         <div>
@@ -297,7 +289,6 @@
       </form>
     </section>
 
-    <!-- Add Investigator Form -->
     <section id="addInvestigatorSection" class="hidden">
       <h2>Add Investigator</h2>
       <form id="addInvestigatorForm">
@@ -323,11 +314,8 @@
   </main>
 
   <script>
-    // Data storage (in-memory)
     const cases = [];
     const investigators = [];
-
-    // Administration assignments
     let administration = {
       oc: null,
       deputy: null,
@@ -336,7 +324,6 @@
       otherInvestigators: []
     };
 
-    // DOM elements
     const casesSection = document.getElementById('casesSection');
     const investigatorsSection = document.getElementById('investigatorsSection');
     const administrationSection = document.getElementById('administrationSection');
@@ -346,24 +333,20 @@
 
     const casesTableBody = document.querySelector('#casesTable tbody');
     const investigatorsTableBody = document.querySelector('#investigatorsTable tbody');
-
     const assignedInvestigatorSelect = document.getElementById('assignedInvestigator');
 
-    // Admin display elements
     const ocPerson = document.getElementById('ocPerson');
     const deputyPerson = document.getElementById('deputyPerson');
     const secretaryPerson = document.getElementById('secretaryPerson');
     const driverPerson = document.getElementById('driverPerson');
     const otherInvestigatorsList = document.getElementById('otherInvestigatorsList');
 
-    // Admin edit form selects
     const ocSelect = document.getElementById('ocSelect');
     const deputySelect = document.getElementById('deputySelect');
     const secretarySelect = document.getElementById('secretarySelect');
     const driverSelect = document.getElementById('driverSelect');
     const otherInvestigatorsSelect = document.getElementById('otherInvestigatorsSelect');
 
-    // Buttons
     const showCasesBtn = document.getElementById('showCasesBtn');
     const showInvestigatorsBtn = document.getElementById('showInvestigatorsBtn');
     const showAdministrationBtn = document.getElementById('showAdministrationBtn');
@@ -372,7 +355,6 @@
     const editAdminBtn = document.getElementById('editAdminBtn');
     const cancelEditAdminBtn = document.getElementById('cancelEditAdminBtn');
 
-    // Hide all main sections
     function hideAllSections() {
       casesSection.classList.add('hidden');
       investigatorsSection.classList.add('hidden');
@@ -382,7 +364,6 @@
       editAdministrationSection.classList.add('hidden');
     }
 
-    // Navigation functions
     function showCases() {
       hideAllSections();
       casesSection.classList.remove('hidden');
@@ -420,14 +401,12 @@
       populateAdminEditForm();
     }
 
-    // Render Cases Table
     function renderCases() {
       casesTableBody.innerHTML = '';
       if (cases.length === 0) {
         casesTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No cases found.</td></tr>';
         return;
       }
-
       cases.forEach(c => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -442,7 +421,6 @@
       });
     }
 
-    // Render Investigators Table
     function renderInvestigators() {
       investigatorsTableBody.innerHTML = '';
       if (investigators.length === 0) {
@@ -461,7 +439,6 @@
       });
     }
 
-    // Populate investigators dropdown for cases
     function populateInvestigatorDropdown() {
       assignedInvestigatorSelect.innerHTML = '<option value="">-- Select Investigator --</option>';
       if (investigators.length === 0) {
@@ -481,7 +458,6 @@
       }
     }
 
-    // Render Administration Section
     function renderAdministration() {
       function findInvByName(name) {
         return investigators.find(i => i.name === name);
@@ -493,7 +469,6 @@
       driverPerson.textContent = administration.driver || 'No assignment yet.';
 
       otherInvestigatorsList.innerHTML = '';
-
       let others = [];
 
       if (administration.otherInvestigators.length > 0) {
@@ -512,17 +487,12 @@
         others.forEach(name => {
           const li = document.createElement('li');
           const inv = findInvByName(name);
-          if (inv) {
-            li.textContent = `${inv.name} (${inv.rank})`;
-          } else {
-            li.textContent = name;
-          }
+          li.textContent = inv ? `${inv.name} (${inv.rank})` : name;
           otherInvestigatorsList.appendChild(li);
         });
       }
     }
 
-    // Populate Administration Edit Form dropdowns
     function populateAdminEditForm() {
       function fillSelectWithInvestigators(selectElement, currentValue) {
         selectElement.innerHTML = '<option value="">-- Select Investigator --</option>';
@@ -530,9 +500,7 @@
           const option = document.createElement('option');
           option.value = inv.name;
           option.textContent = `${inv.name} (${inv.rank})`;
-          if (inv.name === currentValue) {
-            option.selected = true;
-          }
+          if (inv.name === currentValue) option.selected = true;
           selectElement.appendChild(option);
         });
       }
@@ -547,23 +515,14 @@
         const option = document.createElement('option');
         option.value = inv.name;
         option.textContent = `${inv.name} (${inv.rank})`;
-        if (administration.otherInvestigators.includes(inv.name)) {
-          option.selected = true;
-        }
+        if (administration.otherInvestigators.includes(inv.name)) option.selected = true;
         otherInvestigatorsSelect.appendChild(option);
       });
     }
 
-    // Validate administration form
     function validateAdministrationForm() {
-      const selected = [
-        ocSelect.value,
-        deputySelect.value,
-        secretarySelect.value,
-        driverSelect.value
-      ];
-
-      let duplicates = selected.filter((item, index) => item && selected.indexOf(item) !== index);
+      const selected = [ocSelect.value, deputySelect.value, secretarySelect.value, driverSelect.value];
+      const duplicates = selected.filter((item, index) => item && selected.indexOf(item) !== index);
       if (duplicates.length > 0) {
         alert('One or more officers are assigned multiple roles (OC, Deputy, Secretary, Driver must be distinct).');
         return false;
@@ -576,11 +535,9 @@
           return false;
         }
       }
-
       return true;
     }
 
-    // Event Listeners
     showCasesBtn.addEventListener('click', showCases);
     showInvestigatorsBtn.addEventListener('click', showInvestigators);
     showAdministrationBtn.addEventListener('click', showAdministration);
@@ -588,11 +545,8 @@
     addInvestigatorInSectionBtn.addEventListener('click', showAddInvestigator);
 
     editAdminBtn.addEventListener('click', showEditAdministration);
-    cancelEditAdminBtn.addEventListener('click', () => {
-      showAdministration();
-    });
+    cancelEditAdminBtn.addEventListener('click', () => showAdministration());
 
-    // Add Investigator Form submission
     document.getElementById('addInvestigatorForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const officerId = this.officerId.value.trim();
@@ -605,9 +559,7 @@
         return;
       }
       if (investigators.find(inv => inv.name === name)) {
-        if (!confirm('An investigator with this name already exists. Add anyway?')) {
-          return;
-        }
+        if (!confirm('An investigator with this name already exists. Add anyway?')) return;
       }
 
       investigators.push({ officerId, name, rank, email });
@@ -615,7 +567,6 @@
       showInvestigators();
     });
 
-    // Add Case Form submission
     document.getElementById('addCaseForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const caseId = this.caseId.value.trim();
@@ -629,7 +580,6 @@
         alert('Case ID already exists!');
         return;
       }
-
       if (!assignedInvestigator) {
         alert('Please select an investigator.');
         return;
@@ -640,10 +590,8 @@
       showCases();
     });
 
-    // Edit Administration Form submission
     document.getElementById('editAdminForm').addEventListener('submit', function(e) {
       e.preventDefault();
-
       if (!validateAdministrationForm()) return;
 
       administration.oc = ocSelect.value || null;
@@ -656,7 +604,6 @@
       showAdministration();
     });
 
-    // Initialize with some demo data (optional)
     function loadDemoData() {
       investigators.push(
         { officerId: 'O100', name: 'John Kamau', rank: 'Senior Investigator', email: 'john.kamau@dci.go.ke' },
@@ -692,11 +639,8 @@
       administration.otherInvestigators = ['Jillo Komba'];
     }
 
-    // On page load
     loadDemoData();
     showCases();
-
   </script>
-
 </body>
 </html>
